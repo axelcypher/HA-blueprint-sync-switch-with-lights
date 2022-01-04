@@ -41,7 +41,8 @@ action:
             light.turn_off
         {% endif %}
   - condition: template
-    value_template: "{{ states.[person_var].state == 'state_var' }}"
+    value_template: >
+        {{ states.[person_var].state == state_var }}
   - target: !input light_target
     service_template: >
         {% if trigger.to_state.state == 'on' %}
