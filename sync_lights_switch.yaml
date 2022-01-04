@@ -23,6 +23,7 @@ max_exceeded: silent
 trigger:
   platform: state
   entity_id: !input switch_target
+condition:
 action:
-  - service: homeassistant.turn_{{ trigger.to_state.state }}
-    entity_id: !input light_target
+  service: light.turn_{{ trigger.to_state.state }}
+  entity_id: !input light_target
