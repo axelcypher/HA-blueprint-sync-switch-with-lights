@@ -33,34 +33,17 @@ variables:
 trigger:
   platform: state
   entity_id: !input switch_target
-condition:
+
 action:
   - target: !input light_target
-    service_template: >
+    service: >
         {% if trigger.to_state.state == 'off' %}
             light.turn_off
         {% endif %}
   - condition: template
-    value_template: >
-        {{ states.[person_var].state == state_var }}
+    value_template: "{{ is_state('[person_var]', '[state_var]') }}"
   - target: !input light_target
-    service_template: >
+    service: >
         {% if trigger.to_state.state == 'on' %}
             light.turn_on
         {% endif %}      
-        
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
