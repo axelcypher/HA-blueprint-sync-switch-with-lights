@@ -1,29 +1,65 @@
 blueprint:
-  name: Sync Switch with Lights
-  description: Turn on a switch when motion is detected.
+  name: Sync Switch & Lights with Presence Condition
+  description: Sync a switch with multiple Lights and a Presence Contition
   domain: automation
-  source_url: https://github.com/axelcypher/HA-blueprint-sync-switch-with-lights/
+  source_url: https://raw.githubusercontent.com/axelcypher/HA-blueprint-sync-switch-with-lights/main/sync_lights_switch.yaml
   input:
+
     switch_target:
       name: Switch Entity
       selector:
-        target:
           entity:
             domain: switch
     light_target:
-      name: Light Entity
+      name: Light Entities
       selector:
         target:
           entity:
             domain: light
+    person_target:
+      name: Presence Condition
+      selector:
+          entity:
+    state_target:
+      name: Presence State
+      selector:
+          text:
             
 mode: restart
 max_exceeded: silent
-
+variables:
+  person_var: !input person_target
+  state_var: !input state_target
 trigger:
   platform: state
   entity_id: !input switch_target
 condition:
 action:
-  service: light.turn_{{ trigger.to_state.state }}
-  entity_id: !input light_target
+  - target: !input light_target
+    service_template: >
+        {% if trigger.to_state.state == 'off' %}
+            light.turn_off
+        {% endif %}
+  - condition: template
+    value_template: "{{ states.[person_var].state == 'state_var' }}"
+  - target: !input light_target
+    service_template: >
+        {% if trigger.to_state.state == 'on' %}
+            light.turn_on
+        {% endif %}      
+        
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
